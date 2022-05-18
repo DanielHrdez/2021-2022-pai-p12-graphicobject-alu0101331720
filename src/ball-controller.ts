@@ -19,23 +19,35 @@ export class BallController {
     buttonDown: HTMLButtonElement;
     buttonLeft: HTMLButtonElement;
     buttonRight: HTMLButtonElement;
+    buttonUpLeft: HTMLButtonElement;
+    buttonUpRight: HTMLButtonElement;
+    buttonDownRight: HTMLButtonElement;
+    buttonDownLeft: HTMLButtonElement;
     inputIncrement: HTMLInputElement;
   };
   private ball: MobileBall;
+  private offset: string = 'right';
+  private change: boolean = false;
 
   /**
    * Constructor of the class.
    * @param {MobileBall} ball - The ball to control.
+   * @param {string} offset - if is going to be in the right or the left
    */
-  constructor(ball: MobileBall) {
+  constructor(ball: MobileBall, offset: string = 'right') {
     this.params = {
       buttonUp: document.createElement('button'),
       buttonDown: document.createElement('button'),
       buttonLeft: document.createElement('button'),
       buttonRight: document.createElement('button'),
+      buttonUpLeft: document.createElement('button'),
+      buttonUpRight: document.createElement('button'),
+      buttonDownLeft: document.createElement('button'),
+      buttonDownRight: document.createElement('button'),
       inputIncrement: document.createElement('input'),
     };
     this.ball = ball;
+    this.offset = offset;
     this.setParams();
   }
 
@@ -46,12 +58,13 @@ export class BallController {
     this.setParamsStyle();
     const params = document.createElement('div');
     params.style.position = 'absolute';
-    params.style.top = '50%';
-    params.style.right = '0%';
+    params.style.bottom = '-20%';
+    params.style.minWidth = '5%';
+    params.style.minHeight = '25%';
+    if (this.offset === 'right') params.style.right = '5%';
+    else params.style.left = '10%';
     params.style.transform = 'translate(-50%, -50%)';
     params.style.display = 'grid';
-    params.style.minWidth = '10%';
-    params.style.minHeight = '25%';
     for (const param of Object.values(this.params)) {
       params.appendChild(param);
     }
@@ -63,7 +76,9 @@ export class BallController {
    */
   private setIncrementStyle(): void {
     this.params.inputIncrement.type = 'number';
-    this.params.inputIncrement.value = '25';
+    this.params.inputIncrement.style.position = 'relative';
+    this.params.inputIncrement.style.top = '-500%';
+    this.params.inputIncrement.value = '1';
     this.params.inputIncrement.min = '0';
     this.params.inputIncrement.max = '1000';
     this.params.inputIncrement.step = '10';
@@ -78,33 +93,123 @@ export class BallController {
    * @param {string} direction - The direction to set the param.
    */
   private setDirectionStyle(direction: string): void {
+    const buttonPosition = '-200%';
     switch (direction) {
       case 'Up':
         this.params.buttonUp.innerText = direction;
+        this.params.buttonUp.style.position = 'relative';
+        this.params.buttonUp.style.top = '200%';
         this.params.buttonUp.onclick = () => {
-          this.ball.move(Direction.UP);
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.UP);
+          });
         };
         break;
       case 'Down':
         this.params.buttonDown.innerText = direction;
+        this.params.buttonDown.style.position = 'relative';
+        this.params.buttonDown.style.bottom = '-300%';
         this.params.buttonDown.onclick = () => {
-          this.ball.move(Direction.DOWN);
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.DOWN);
+          });
         };
         break;
       case 'Left':
         this.params.buttonLeft.innerText = direction;
+        this.params.buttonLeft.style.position = 'relative';
+        this.params.buttonLeft.style.bottom = '-100%';
+        this.params.buttonLeft.style.left = '-100%';
         this.params.buttonLeft.onclick = () => {
-          this.ball.move(Direction.LEFT);
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.LEFT);
+          });
         };
         break;
       case 'Right':
         this.params.buttonRight.innerText = direction;
+        this.params.buttonRight.style.position = 'relative';
+        this.params.buttonRight.style.right = '-100%';
+        this.params.buttonRight.style.top = '0%';
         this.params.buttonRight.onclick = () => {
-          this.ball.move(Direction.RIGHT);
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.RIGHT);
+          });
+        };
+        break;
+      case 'UpRight':
+        this.params.buttonUpRight.innerText = direction;
+        this.params.buttonUpRight.style.position = 'relative';
+        this.params.buttonUpRight.style.right = '-100%';
+        this.params.buttonUpRight.style.top = '-300%';
+        this.params.buttonUpRight.onclick = () => {
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.UPRIGHT);
+          });
+        };
+        break;
+      case 'UpLeft':
+        this.params.buttonUpLeft.innerText = direction;
+        this.params.buttonUpLeft.style.position = 'relative';
+        this.params.buttonUpLeft.style.bottom = '200%';
+        this.params.buttonUpLeft.style.left = '-100%';
+        this.params.buttonUpLeft.onclick = () => {
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.UPLEFT);
+          });
+        };
+        break;
+      case 'DownRight':
+        this.params.buttonDownRight.innerText = direction;
+        this.params.buttonDownRight.style.position = 'relative';
+        this.params.buttonDownRight.style.left = '100%';
+        this.params.buttonDownRight.style.bottom = '300%';
+        this.params.buttonDownRight.onclick = () => {
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.DOWNRIGHT);
+          });
+        };
+        break;
+      case 'DownLeft':
+        this.params.buttonDownLeft.innerText = direction;
+        this.params.buttonDownLeft.style.position = 'relative';
+        this.params.buttonDownLeft.style.right = '100%';
+        this.params.buttonDownLeft.style.top = buttonPosition;
+        this.params.buttonDownLeft.onclick = () => {
+          this.change = true;
+          requestAnimationFrame(() => {
+            this.change = false;
+            this.moveAnimation(Direction.DOWNLEFT);
+          });
         };
         break;
       default:
         throw new Error('Invalid direction');
+    }
+  }
+
+  /**
+   * Move the ball in loop
+   * @param {Direction} direction direction
+   */
+  private moveAnimation(direction: Direction): void {
+    this.ball.move(direction);
+    if (!this.change) {
+      requestAnimationFrame(() => this.moveAnimation(direction));
     }
   }
 
@@ -116,6 +221,10 @@ export class BallController {
     this.setDirectionStyle('Down');
     this.setDirectionStyle('Left');
     this.setDirectionStyle('Right');
+    this.setDirectionStyle('UpRight');
+    this.setDirectionStyle('UpLeft');
+    this.setDirectionStyle('DownRight');
+    this.setDirectionStyle('DownLeft');
     this.setIncrementStyle();
   }
 }

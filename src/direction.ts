@@ -12,6 +12,10 @@ export enum Direction {
   UP,
   DOWN,
   LEFT,
-  RIGHT
+  RIGHT,
+  UPRIGHT,
+  UPLEFT,
+  DOWNRIGHT,
+  DOWNLEFT,
 }
 /* eslint-enable no-unused-vars */
